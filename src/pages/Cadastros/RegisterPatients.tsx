@@ -1,6 +1,7 @@
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import { createPaciente } from "../../services/patients.api"; // Ajuste o caminho se necessário
 import "../../../css/index.css";
 import "../../../css/main.css";
 import "../../../css/paginas.css";
@@ -12,27 +13,39 @@ const CadastroPacientes = () => {
     dataNascimento: "",
     sexo: "",
   };
+
   const navigate = useNavigate();
+
   const validationSchema = Yup.object({
     nome: Yup.string().required("Nome é obrigatório"),
     cpf: Yup.string()
       .matches(/^\d{11}$/, "CPF deve conter 11 números")
       .required("CPF é obrigatório"),
-    dataNascimento: Yup.date().required("Data de nascimento é obrigatória"),
+    dataNascimento: Yup.date()
+      .required("Data de nascimento é obrigatória")
+      .max(new Date(), "A data de nascimento não pode ser futura"),
     sexo: Yup.string().required("Sexo é obrigatório"),
   });
 
-  const handleSubmit = (values: typeof initialValues) => {
-    console.log(values);
-    alert("Paciente cadastrado com sucesso!");
-    navigate("/pacientes");
+  const handleSubmit = async (values: typeof initialValues, { setSubmitting, resetForm }) => {
+    try {
+      // Chamar a API para criar o paciente
+      await createPaciente(values);
+
+      alert("Paciente cadastrado com sucesso!");
+      resetForm(); // Limpa o formulário após o cadastro
+      navigate("/pacientes"); // Redireciona para a página de listagem
+    } catch (error) {
+      console.error(error);
+      alert("Ocorreu um erro ao cadastrar o paciente. Tente novamente.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <div>
-      <div className="header">
-        Cadastro de Pacientes
-      </div>
+      <div className="header">Cadastro de Pacientes</div>
       <main>
         <Formik
           initialValues={initialValues}
@@ -71,12 +84,7 @@ const CadastroPacientes = () => {
               <ErrorMessage name="dataNascimento" component="div" className="error-message" />
 
               <label htmlFor="sexo">Sexo:</label>
-              <Field
-                as="select"
-                id="sexo"
-                name="sexo"
-                className="input"
-              >
+              <Field as="select" id="sexo" name="sexo" className="input">
                 <option value="" disabled>
                   Selecione o sexo
                 </option>

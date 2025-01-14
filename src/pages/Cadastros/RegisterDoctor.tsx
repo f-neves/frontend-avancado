@@ -1,6 +1,7 @@
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import { createMedicos } from "../../services/doctors.api"; // Ajuste o caminho se necessário
 import "../../../css/index.css";
 import "../../../css/main.css";
 import "../../../css/paginas.css";
@@ -10,8 +11,9 @@ const CadastroMedicos = () => {
     nome: "",
     crm: "",
     especialidade: "",
-    papel: ""
+    papel: "",
   };
+
   const navigate = useNavigate();
 
   const validationSchema = Yup.object({
@@ -21,25 +23,30 @@ const CadastroMedicos = () => {
     crm: Yup.string()
       .required("CRM é obrigatório")
       .matches(/^\d+$/, "CRM deve conter apenas números"),
-    especialidade: Yup.string()
-      .required("Especialidade é obrigatória"),
+    especialidade: Yup.string().required("Especialidade é obrigatória"),
     papel: Yup.string()
       .oneOf(["REGULADOR", "ORIGEM", "DESTINO"], "Selecione um papel válido")
-      .required("Papel é obrigatório")
+      .required("Papel é obrigatório"),
   });
 
-  const handleSubmit = (values: typeof initialValues, { setSubmitting }: any) => {
-    console.log(values);
-    alert("Médico cadastrado com sucesso!");
-    setSubmitting(false);
-    navigate("/medicos");
+  const handleSubmit = async (values: typeof initialValues, { setSubmitting, resetForm }: any) => {
+    try {
+      // Chama a API para criar um médico
+      await createMedicos(values);
+      alert("Médico cadastrado com sucesso!");
+      resetForm(); // Limpa o formulário
+      navigate("/medicos"); // Redireciona para a listagem de médicos
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao cadastrar médico. Tente novamente.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <div>
-      <div className="header">
-        Cadastro de Médicos
-      </div>
+      <div className="header">Cadastro de Médicos</div>
       <main>
         <Formik
           initialValues={initialValues}
@@ -123,12 +130,7 @@ const CadastroMedicos = () => {
               <ErrorMessage name="especialidade" component="div" className="error-message" />
 
               <label htmlFor="papel">Papel:</label>
-              <Field
-                as="select"
-                id="papel"
-                name="papel"
-                className="input"
-              >
+              <Field as="select" id="papel" name="papel" className="input">
                 <option value="">Selecione um papel</option>
                 <option value="REGULADOR">Regulador</option>
                 <option value="ORIGEM">Origem</option>
