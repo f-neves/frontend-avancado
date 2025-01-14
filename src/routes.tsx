@@ -5,11 +5,11 @@ import Patients from './pages/Patients';
 import Doctors from './pages/Doctors';
 import Hospitals from './pages/Hospitals';
 import Transfers from './pages/Transfers';
-import RegisterPatients from './pages/RegisterPatients';
-import RegisterTransfers from './pages/RegisterTransfers';
-import RegisterDoctor from './pages/RegisterDoctor';
-import RegisterHospital from './pages/RegisterHospital';
-import EditPatients from './pages/EditPatients';
+import RegisterPatients from './pages/Cadastros/RegisterPatients';
+import RegisterTransfers from './pages/Cadastros/RegisterTransfers';
+import RegisterDoctor from './pages/Cadastros/RegisterDoctor';
+import RegisterHospital from './pages/Cadastros/RegisterHospital';
+import EditPatients from './pages/Editar/EditPatients';
 
 const router = createBrowserRouter([
   {

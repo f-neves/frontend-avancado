@@ -1,44 +1,51 @@
 import { useNavigate } from "react-router-dom";
-import "../../css/index.css"
-import "../../css/main.css"
-import "../../css/paginas.css"
+import GenericTable from "./GenericTable/GenericTable";
+import "../../css/index.css";
+import "../../css/main.css";
+import "../../css/paginas.css";
 
 const Pacientes = () => {
-
   const navigate = useNavigate();
-  
+
+  const headers = {
+    nome: "Nome",
+    cpf: "CPF",
+    dataNascimento: "Data de Nascimento",
+    sexo: "Sexo",
+  };
+
+  const data = [
+    { nome: "João Silva", cpf: "12345678901", dataNascimento: "01/01/1980", sexo: "Masculino" },
+    { nome: "Maria Oliveira", cpf: "98765432100", dataNascimento: "15/05/1995", sexo: "Feminino" },
+    { nome: "Carlos Santos", cpf: "65432109876", dataNascimento: "20/08/1990", sexo: "Masculino" },
+  ];
+
   const handleCadastrarPaciente = () => {
     navigate("/cadastro-pacientes");
   };
 
   return (
     <div>
-      <div className="header">
-        Pacientes Cadastrados
-      </div>
+      <div className="header">Pacientes Cadastrados</div>
       <main>
-        <section>
-          <table className="pacientes-table">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>CPF</th>
-                <th>Data de Nascimento</th>
-                <th>Sexo</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody id="pacienteTableBody">
-              {/* Linhas geradas dinamicamente */}
-            </tbody>
-          </table>
-          <button
-            onClick={handleCadastrarPaciente}
-            className="add-paciente-button"
-          >
-            Cadastrar Novo Paciente
-          </button>
-        </section>
+        <GenericTable
+          headers={headers}
+          data={data}
+          actions={(item) => (
+            <button
+              onClick={() => alert(`Editando o paciente: ${item.nome}`)}
+              className="edit-button"
+            >
+              Editar
+            </button>
+          )}
+        />
+        <button
+          onClick={handleCadastrarPaciente}
+          className="edit-button"
+        >
+          Cadastrar Novo Paciente
+        </button>
       </main>
       <footer>
         <p>&copy; 2024 STP. Todos os direitos reservados.</p>

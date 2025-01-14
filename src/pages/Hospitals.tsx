@@ -1,43 +1,47 @@
 import { useNavigate } from "react-router-dom";
-import "../../css/index.css"
-import "../../css/main.css"
-import "../../css/paginas.css"
+import GenericTable from "./GenericTable/GenericTable";
+import "../../css/index.css";
+import "../../css/main.css";
+import "../../css/paginas.css";
 
 const Hospitais = () => {
-  
-const navigate = useNavigate();
-const handleCadastrarHospital = () => {
-  navigate("/cadastro-hospitais");
-};
+  const navigate = useNavigate();
+
+  const headers = {
+    name: "Nome",
+    phone: "Telefone",
+    email: "Email",
+    address: "Endereço",
+  };
+
+  const data = [
+    { name: "Hospital A", phone: "12345-6789", email: "a@hospital.com", address: "Rua 1" },
+    { name: "Hospital B", phone: "98765-4321", email: "b@hospital.com", address: "Rua 2" },
+  ];
+
+  const handleCadastrarHospital = () => {
+    navigate("/cadastro-hospitais");
+  };
 
   return (
     <div>
-      <div className="header">
-        Hospitais Cadastrados
-      </div>
+      <div className="header">Hospitais Cadastrados</div>
       <main>
-        <section>
-          <table className="hospitais-table">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Telefone</th>
-                <th>Email</th>
-                <th>Endereço</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody className="hospitalTableBody">
-              {/* Linhas geradas dinamicamente */}
-            </tbody>
-          </table>
-          <button
-            onClick={handleCadastrarHospital}
-            className="add-hospital-button"
-          >
-            Cadastrar Novo Hospital
-          </button>
-        </section>
+        <GenericTable
+          headers={headers}
+          data={data}
+          actions={(item) => (
+            <button
+              onClick={() => alert(`Editando ${item.name}`)}
+              className="edit-button"
+            >
+              Editar
+            </button>
+          )}
+        />
+        <button onClick={handleCadastrarHospital} className="edit-button">
+          Cadastrar Novo Hospital
+        </button>
       </main>
       <footer>
         <p>&copy; 2024 STP. Todos os direitos reservados.</p>

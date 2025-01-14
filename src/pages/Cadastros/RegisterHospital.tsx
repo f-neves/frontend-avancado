@@ -1,9 +1,9 @@
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-import "../../css/index.css";
-import "../../css/main.css";
-import "../../css/paginas.css";
+import "../../../css/index.css";
+import "../../../css/main.css";
+import "../../../css/paginas.css";
 
 const CadastroHospitais = () => {
   const initialValues = {

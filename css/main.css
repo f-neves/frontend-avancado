@@ -132,10 +132,7 @@ table tr:hover {
   background-color: #005bb5;
 }
 
-.add-paciente-button,
-.add-hospital-button,
-.add-transferencia-button,
-.add-medico-button {
+.edit-button {
   display: block;
   margin: 20px auto;
   padding: 10px 20px;
@@ -148,10 +145,7 @@ table tr:hover {
   transition: background-color 0.3s;
 }
 
-.add-paciente-button:hover,
-.add-hospital-button:hover,
-.add-transferencia-button:hover,
-.add-medico-button:hover {
+.edit-button:hover {
   background-color: #005bb5;
 }
 
@@ -189,10 +183,10 @@ table tr:hover {
     padding: 8px;
   }
 
-  .add-paciente-button,
-  .add-hospital-button,
-  .add-transferencia-button,
-  .add-medico-button {
+  .edit-button,
+  .edit-button,
+  .edit-button,
+  .edit-button {
     font-size: 0.9rem;
   }
 }
@@ -216,10 +210,10 @@ table tr:hover {
     margin: 5px;
   }
 
-  .add-paciente-button,
-  .add-hospital-button,
-  .add-transferencia-button,
-  .add-medico-button {
+  .edit-button,
+  .edit-button,
+  .edit-button,
+  .edit-button {
     width: 90%;
     font-size: 0.8rem;
   }
@@ -254,10 +248,10 @@ table tr:hover {
     margin: 5px 0;
   }
 
-  .add-paciente-button,
-  .add-hospital-button,
-  .add-transferencia-button,
-  .add-medico-button {
+  .edit-button,
+  .edit-button,
+  .edit-button,
+  .edit-button {
     font-size: 0.7rem;
     padding: 10px;
   }
