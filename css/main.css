@@ -134,7 +134,7 @@ table tr:hover {
 
 .edit-button {
   display: block;
-  margin: 20px auto;
+  margin: 5px auto;
   padding: 10px 20px;
   font-size: 1rem;
   color: white;
@@ -183,9 +183,7 @@ table tr:hover {
     padding: 8px;
   }
 
-  .edit-button,
-  .edit-button,
-  .edit-button,
+
   .edit-button {
     font-size: 0.9rem;
   }
@@ -210,9 +208,7 @@ table tr:hover {
     margin: 5px;
   }
 
-  .edit-button,
-  .edit-button,
-  .edit-button,
+
   .edit-button {
     width: 90%;
     font-size: 0.8rem;
@@ -248,9 +244,6 @@ table tr:hover {
     margin: 5px 0;
   }
 
-  .edit-button,
-  .edit-button,
-  .edit-button,
   .edit-button {
     font-size: 0.7rem;
     padding: 10px;

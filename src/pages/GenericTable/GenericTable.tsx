@@ -29,7 +29,7 @@ function GenericTable({ headers, data, actions }: Props) {
             data.map((item, rowIndex) => (
               <tr key={rowIndex}>
                 {Object.keys(headers).map((key, colIndex) => (
-                  <td key={colIndex}>{item[key]}</td>
+                  <td key={colIndex}>{item[key] as React.ReactNode}</td>
                 ))}
                 {actions && <td>{actions(item)}</td>}
               </tr>

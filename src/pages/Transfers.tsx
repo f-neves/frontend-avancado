@@ -1,11 +1,16 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import GenericTable from "./GenericTable/GenericTable";
+import { getTransferencias } from "../services/transfers.api";
 import "../../css/index.css";
 import "../../css/main.css";
 import "../../css/paginas.css";
 
 const Transferencias = () => {
   const navigate = useNavigate();
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const headers = {
     origem: "Origem",
@@ -20,48 +25,45 @@ const Transferencias = () => {
     motivo: "Motivo",
   };
 
-  const data = [
-    {
-      origem: "Hospital A",
-      destino: "Hospital B",
-      data: "12/01/2025",
-      classificacao: "Alta",
-      procedimentosAcondicionamento: "Frio",
-      procedimentosUnidadeDestino: "Documentos",
-      distancia: "15 km",
-      meioDeTransporte: "Ambulância",
-      status: "Aprovado",
-      motivo: "Urgência",
-    },
-    {
-      origem: "Hospital C",
-      destino: "Hospital D",
-      data: "10/01/2025",
-      classificacao: "Média",
-      procedimentosAcondicionamento: "Ambiente",
-      procedimentosUnidadeDestino: "Avaliação médica",
-      distancia: "25 km",
-      meioDeTransporte: "Helicóptero",
-      status: "Pendente",
-      motivo: "Emergência",
-    },
-    {
-      origem: "Hospital E",
-      destino: "Hospital F",
-      data: "08/01/2025",
-      classificacao: "Baixa",
-      procedimentosAcondicionamento: "Ambiente",
-      procedimentosUnidadeDestino: "Conferência",
-      distancia: "10 km",
-      meioDeTransporte: "Ambulância",
-      status: "Cancelado",
-      motivo: "Paciente estável",
-    },
-  ];
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const transfers = await getTransferencias();
+
+      // Formatar os dados para a GenericTable
+      const formattedData = transfers.map((item) => ({
+        origem: item.origem?.nome || "Desconhecido",
+        destino: item.destino?.nome || "Desconhecido",
+        data: item.horarioSaida
+          ? new Date(item.horarioSaida).toLocaleDateString("pt-BR")
+          : "Não informado",
+        classificacao: item.classificacao || "Sem classificação",
+        procedimentosAcondicionamento: item.procedimentosAcondicionamento || "Nenhum",
+        procedimentosUnidadeDestino: item.procedimentosUnidadeDestino || "Nenhum",
+        distancia: `${item.distancia || 0} km`,
+        meioDeTransporte: item.meioTransporte || "Indefinido",
+        status: item.status || "Indefinido",
+        motivo: item.solicitacao?.justificativa || "Não especificado",
+      }));
+
+      setData(formattedData);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, []);
+
 
   const handleCadastrarTransferencia = () => {
     navigate("/cadastro-transferencias");
   };
+
+  if (loading) return <p>Carregando...</p>;
+  if (error) return <p>Erro: {error}</p>;
 
   return (
     <div>
@@ -72,7 +74,11 @@ const Transferencias = () => {
           data={data}
           actions={(item) => (
             <button
-              onClick={() => alert(`Detalhes da transferência de ${item.origem} para ${item.destino}`)}
+              onClick={() =>
+                alert(
+                  `Detalhes da transferência de ${item.origem} para ${item.destino}`
+                )
+              }
               className="edit-button"
             >
               Detalhes

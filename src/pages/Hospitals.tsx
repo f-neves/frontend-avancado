@@ -1,11 +1,16 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import GenericTable from "./GenericTable/GenericTable";
+import { getHospitais } from "../services/hospitals.api";
 import "../../css/index.css";
 import "../../css/main.css";
 import "../../css/paginas.css";
 
 const Hospitais = () => {
   const navigate = useNavigate();
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const headers = {
     name: "Nome",
@@ -14,14 +19,39 @@ const Hospitais = () => {
     address: "Endereço",
   };
 
-  const data = [
-    { name: "Hospital A", phone: "12345-6789", email: "a@hospital.com", address: "Rua 1" },
-    { name: "Hospital B", phone: "98765-4321", email: "b@hospital.com", address: "Rua 2" },
-  ];
+useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const hospitals = await getHospitais();
+
+        // Formatar os dados para a tabela
+        const formattedData = hospitals.map((hospital) => ({
+          name: hospital.nome || "Desconhecido",
+          phone: hospital.telefone || "Não informado",
+          email: hospital.email || "Não informado",
+          address: hospital.endereco
+            ? `${hospital.endereco.rua}, ${hospital.endereco.bairro}, ${hospital.endereco.cidade} - ${hospital.endereco.estado}, ${hospital.endereco.cep}`
+            : "Endereço não disponível",
+          id: hospital.id, // Necessário para identificar ações específicas
+        }));
+
+        setData(formattedData);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleCadastrarHospital = () => {
     navigate("/cadastro-hospitais");
   };
+
+  if (loading) return <p>Carregando...</p>;
+  if (error) return <p>Erro: {error}</p>;
 
   return (
     <div>
@@ -32,7 +62,7 @@ const Hospitais = () => {
           data={data}
           actions={(item) => (
             <button
-              onClick={() => alert(`Editando ${item.name}`)}
+              onClick={() => alert(`Editando o hospital: ${item.name}`)}
               className="edit-button"
             >
               Editar

@@ -1,11 +1,16 @@
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import GenericTable from "./GenericTable/GenericTable";
+import { getMedicos } from "../services/doctors.api";
 import "../../css/index.css";
 import "../../css/main.css";
 import "../../css/paginas.css";
 
 const Medicos = () => {
   const navigate = useNavigate();
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const headers = {
     nome: "Nome",
@@ -14,15 +19,27 @@ const Medicos = () => {
     papel: "Papel",
   };
 
-  const data = [
-    { nome: "Dr. João", crm: "12345", especialidade: "Cardiologia", papel: "Chefe" },
-    { nome: "Dra. Maria", crm: "67890", especialidade: "Pediatria", papel: "Assistente" },
-    { nome: "Dr. Pedro", crm: "54321", especialidade: "Dermatologia", papel: "Residente" },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const doctors = await getMedicos();
+        setData(doctors);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleCadastrarMedico = () => {
     navigate("/cadastro-medicos");
   };
+
+  if (loading) return <p>Carregando...</p>;
+  if (error) return <p>Erro: {error}</p>;
 
   return (
     <div>
@@ -33,7 +50,7 @@ const Medicos = () => {
           data={data}
           actions={(item) => (
             <button
-              onClick={() => alert(`Editando ${item.nome}`)}
+              onClick={() => alert(`Editando o médico: ${item.nome}`)}
               className="edit-button"
             >
               Editar
