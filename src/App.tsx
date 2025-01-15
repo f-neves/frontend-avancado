@@ -1,15 +1,14 @@
-import './App.css'
+import './App.css';
 import Navbar from './pages/Navbar';
-import Routes from './routes'
+import AppRoutes from './routes';
 
 function App() {
-
   return (
     <>
       <Navbar />
-      <Routes />
+      <AppRoutes />
     </>
-  )
+  );
 }
 
 export default App;

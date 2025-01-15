@@ -19,7 +19,6 @@ const CadastroPacientes = () => {
   const validationSchema = Yup.object({
     nome: Yup.string().required("Nome é obrigatório"),
     cpf: Yup.string()
-      .matches(/^\d{11}$/, "CPF deve conter 11 números")
       .required("CPF é obrigatório"),
     dataNascimento: Yup.date()
       .required("Data de nascimento é obrigatória")

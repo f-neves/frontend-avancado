@@ -1,4 +1,4 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Patients from './pages/Patients';
@@ -10,56 +10,25 @@ import RegisterTransfers from './pages/Cadastros/RegisterTransfers';
 import RegisterDoctor from './pages/Cadastros/RegisterDoctor';
 import RegisterHospital from './pages/Cadastros/RegisterHospital';
 import EditPatients from './pages/Editar/EditPatients';
+import EditTransfers from './pages/Editar/EditTransfers';
 
-const router = createBrowserRouter([
-  {
-    path: "",
-    element: <Home />,
-  },
-  {
-    path: "login",
-    element: <Login />,
-  },
-  {
-    path: "pacientes",
-    element: <Patients/>,
-  },
-  {
-    path: "hospitais",
-    element: <Hospitals/>,
-  },
-  {
-    path: "transferencias",
-    element: <Transfers/>,
-  },
-  {
-    path: "medicos",
-    element: <Doctors/>,
-  },
-  {
-    path: "/cadastro-pacientes",
-    element: <RegisterPatients/>,
-  },
-  {
-    path: "/editar-pacientes",
-    element: <EditPatients/>,
-  },
-  {
-    path: "/cadastro-transferencias",
-    element: <RegisterTransfers/>,
-  },
-  {
-    path: "/cadastro-medicos",
-    element: <RegisterDoctor/>,
-  },
-  {
-    path: "/cadastro-hospitais",
-    element: <RegisterHospital/>,
-  },
-]);
-
-function Routes() {
-  return <RouterProvider router={router} />;
+function AppRoutes() {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="login" element={<Login />} />
+      <Route path="pacientes" element={<Patients />} />
+      <Route path="hospitais" element={<Hospitals />} />
+      <Route path="transferencias" element={<Transfers />} />
+      <Route path="medicos" element={<Doctors />} />
+      <Route path="/cadastro-pacientes" element={<RegisterPatients />} />
+      <Route path="/editar-pacientes/:id" element={<EditPatients />} />
+      <Route path="/cadastro-transferencias" element={<RegisterTransfers />} />
+      <Route path="/editar-transferencias/:id" element={<EditTransfers />} />
+      <Route path="/cadastro-medicos" element={<RegisterDoctor />} />
+      <Route path="/cadastro-hospitais" element={<RegisterHospital />} />
+    </Routes>
+  );
 }
 
-export default Routes;
+export default AppRoutes;

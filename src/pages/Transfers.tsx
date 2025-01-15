@@ -25,41 +25,45 @@ const Transferencias = () => {
     motivo: "Motivo",
   };
 
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const transfers = await getTransferencias();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const transfers = await getTransferencias();
 
-      // Formatar os dados para a GenericTable
-      const formattedData = transfers.map((item) => ({
-        origem: item.origem?.nome || "Desconhecido",
-        destino: item.destino?.nome || "Desconhecido",
-        data: item.horarioSaida
-          ? new Date(item.horarioSaida).toLocaleDateString("pt-BR")
-          : "Não informado",
-        classificacao: item.classificacao || "Sem classificação",
-        procedimentosAcondicionamento: item.procedimentosAcondicionamento || "Nenhum",
-        procedimentosUnidadeDestino: item.procedimentosUnidadeDestino || "Nenhum",
-        distancia: `${item.distancia || 0} km`,
-        meioDeTransporte: item.meioTransporte || "Indefinido",
-        status: item.status || "Indefinido",
-        motivo: item.solicitacao?.justificativa || "Não especificado",
-      }));
+        // Formatar os dados para a GenericTable
+        const formattedData = transfers.map((item) => ({
+          id: item.id,
+          origem: item.origem?.nome || "Desconhecido",
+          destino: item.destino?.nome || "Desconhecido",
+          data: item.horarioSaida
+            ? new Date(item.horarioSaida).toLocaleDateString("pt-BR")
+            : "Não informado",
+          classificacao: item.classificacao || "Sem classificação",
+          procedimentosAcondicionamento: item.procedimentosAcondicionamento || "Nenhum",
+          procedimentosUnidadeDestino: item.procedimentosUnidadeDestino || "Nenhum",
+          distancia: `${item.distancia || 0} km`,
+          meioDeTransporte: item.meioTransporte || "Indefinido",
+          status: item.status || "Indefinido",
+          motivo: item.solicitacao?.justificativa || "Não especificado",
+        }));
 
-      setData(formattedData);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchData();
-}, []);
-
+        setData(formattedData);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleCadastrarTransferencia = () => {
     navigate("/cadastro-transferencias");
+  };
+
+  const handleEditarTransferencia = (id: string) => {
+    console.log(id);
+    navigate(`/editar-transferencias/${id}`);
   };
 
   if (loading) return <p>Carregando...</p>;
@@ -74,11 +78,7 @@ useEffect(() => {
           data={data}
           actions={(item) => (
             <button
-              onClick={() =>
-                alert(
-                  `Detalhes da transferência de ${item.origem} para ${item.destino}`
-                )
-              }
+              onClick={() => handleEditarTransferencia(item.id as string)}
               className="edit-button"
             >
               Detalhes

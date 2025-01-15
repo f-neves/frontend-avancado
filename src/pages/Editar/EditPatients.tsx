@@ -2,17 +2,13 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { getPacienteById, updatePaciente, deletePaciente } from "../../services/patients.api";
 import "../../../css/index.css";
 import "../../../css/main.css";
 import "../../../css/paginas.css";
+import { Patient } from "../../types/patient.type";
 
-interface Patient {
-  id: string;
-  nome: string;
-  cpf: string;
-  dataNascimento: string;
-  sexo: "MASCULINO" | "FEMININO";
-}
+
 
 const EditarPaciente = () => {
   const { id } = useParams();
@@ -21,17 +17,13 @@ const EditarPaciente = () => {
   const [paciente, setPaciente] = useState<Patient | null>(null);
 
   useEffect(() => {
-    // Aqui você faria a chamada à API para buscar os dados do paciente
-    // Exemplo simulado:
     const fetchPaciente = async () => {
       try {
-        // Substitua por sua chamada real à API
-        const response = await fetch(`/api/pacientes/${id}`);
-        const data = await response.json();
+        const data = await getPacienteById(id as string);
         setPaciente(data);
       } catch (error) {
         console.error("Erro ao buscar dados do paciente:", error);
-        alert("Erro ao carregar dados do paciente");
+        alert("Erro ao carregar dados do paciente.");
       } finally {
         setIsLoading(false);
       }
@@ -45,34 +37,37 @@ const EditarPaciente = () => {
       .required("Nome é obrigatório")
       .min(3, "Nome deve ter pelo menos 3 caracteres"),
     cpf: Yup.string()
-      .required("CPF é obrigatório")
-      .matches(/^\d{11}$/, "CPF deve conter 11 números"),
+      .required("CPF é obrigatório"),
     dataNascimento: Yup.date()
       .required("Data de nascimento é obrigatória")
       .max(new Date(), "Data de nascimento não pode ser no futuro"),
     sexo: Yup.string()
       .required("Sexo é obrigatório")
-      .oneOf(["MASCULINO", "FEMININO"], "Selecione um sexo válido")
   });
 
   const handleSubmit = async (values: Patient, { setSubmitting }: any) => {
     try {
-      // Substitua por sua chamada real à API
-      await fetch(`/api/pacientes/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
-      });
-
+      await updatePaciente(id as string, values);
       alert("Paciente atualizado com sucesso!");
       navigate("/pacientes");
     } catch (error) {
       console.error("Erro ao atualizar paciente:", error);
-      alert("Erro ao atualizar paciente");
+      alert("Erro ao atualizar paciente.");
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (window.confirm("Você tem certeza que deseja excluir este paciente?")) {
+      try {
+        await deletePaciente(id as string);
+        alert("Paciente excluído com sucesso!");
+        navigate("/pacientes");
+      } catch (error) {
+        console.error("Erro ao excluir paciente:", error);
+        alert("Erro ao excluir paciente.");
+      }
     }
   };
 
@@ -81,30 +76,26 @@ const EditarPaciente = () => {
   }
 
   if (!paciente) {
-    return <div>Paciente não encontrado</div>;
+    return <div>Paciente não encontrado.</div>;
   }
 
   return (
     <div>
-      <div className="header">
-        Editar Paciente
-      </div>
+      <div className="header">Editar Paciente</div>
       <main>
         <Formik
           initialValues={{
             id: paciente.id,
             nome: paciente.nome,
-            cpf: paciente.cpf,
+            cpf: paciente.cpf.replace(/\D/g, ""),
             dataNascimento: paciente.dataNascimento,
-            sexo: paciente.sexo
+            sexo: paciente.sexo,
           }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
             <Form className="register-form">
-              <Field type="hidden" name="id" />
-
               <label htmlFor="nome">Nome:</label>
               <Field
                 type="text"
@@ -135,15 +126,15 @@ const EditarPaciente = () => {
               <ErrorMessage name="dataNascimento" component="div" className="error-message" />
 
               <label htmlFor="sexo">Sexo:</label>
-              <Field
-                as="select"
-                id="sexo"
-                name="sexo"
-                className="input"
-              >
-                <option value="">Selecione o sexo</option>
-                <option value="MASCULINO">Masculino</option>
-                <option value="FEMININO">Feminino</option>
+              <Field 
+                as="select" 
+                id="sexo" 
+                name="sexo" 
+                className="input">
+                  <option value="">Selecione o sexo</option>
+                  <option value="MASCULINO">Masculino</option>
+                  <option value="FEMININO">Feminino</option>
+                  <option value="OUTRO">Outro</option>
               </Field>
               <ErrorMessage name="sexo" component="div" className="error-message" />
 
@@ -151,12 +142,19 @@ const EditarPaciente = () => {
                 <button type="submit" disabled={isSubmitting}>
                   {isSubmitting ? "Salvando..." : "Salvar Alterações"}
                 </button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={() => navigate("/pacientes")}
                   className="cancel-button"
                 >
                   Cancelar
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  className="delete-button"
+                >
+                  Excluir Paciente
                 </button>
               </div>
             </Form>
