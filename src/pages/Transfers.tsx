@@ -5,14 +5,17 @@ import { getTransferencias } from "../services/transfers.api";
 import "../../css/index.css";
 import "../../css/main.css";
 import "../../css/paginas.css";
+import { getPacienteById } from "../services/patients.api";
+import { TabelaTransferencia } from "../types/transfers.type";
 
 const Transferencias = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<TabelaTransferencia[]>([]); // Define o tipo explícito do estado
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   const headers = {
+    paciente: "Paciente",
     origem: "Origem",
     destino: "Destino",
     data: "Data",
@@ -26,43 +29,52 @@ const Transferencias = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const processarTransferencias = async () => {
       try {
-        const transfers = await getTransferencias();
+        const dataTransferencia = await getTransferencias();
+        const formattedData: TabelaTransferencia[] = await Promise.all(
+          dataTransferencia.map(async (transferencia: any) => {
+            const dataPaciente = await getPacienteById(
+              transferencia.solicitacao.pacienteId as string
+            );
 
-        // Formatar os dados para a GenericTable
-        const formattedData = transfers.map((item) => ({
-          id: item.id,
-          origem: item.origem?.nome || "Desconhecido",
-          destino: item.destino?.nome || "Desconhecido",
-          data: item.horarioSaida
-            ? new Date(item.horarioSaida).toLocaleDateString("pt-BR")
-            : "Não informado",
-          classificacao: item.classificacao || "Sem classificação",
-          procedimentosAcondicionamento: item.procedimentosAcondicionamento || "Nenhum",
-          procedimentosUnidadeDestino: item.procedimentosUnidadeDestino || "Nenhum",
-          distancia: `${item.distancia || 0} km`,
-          meioDeTransporte: item.meioTransporte || "Indefinido",
-          status: item.status || "Indefinido",
-          motivo: item.solicitacao?.justificativa || "Não especificado",
-        }));
 
-        setData(formattedData);
-      } catch (err) {
-        setError(err.message);
+            return {
+              paciente: dataPaciente.nome,
+              origem: transferencia.origem?.nome || "Desconhecido",
+              destino: transferencia.destino?.nome || "Desconhecido",
+              data: transferencia.horarioSaida
+                ? new Date(transferencia.horarioSaida).toLocaleDateString("pt-BR")
+                : "Não informado",
+              classificacao: transferencia.classificacao || "Sem classificação",
+              procedimentosAcondicionamento: transferencia.procedimentosAcondicionamento || "Nenhum",
+              procedimentosUnidadeDestino: transferencia.procedimentosUnidadeDestino || "Nenhum",
+              distancia: `${transferencia.distancia || 0} km`,
+              meioDeTransporte: transferencia.meioTransporte || "Indefinido",
+              status: transferencia.status || "Indefinido",
+              motivo: transferencia.solicitacao?.justificativa || "Não especificado",
+            };
+          })
+        );
+        console.log("formattedData",formattedData);
+
+        setData(formattedData); // Atualiza o estado com os dados formatados
+      } catch (error) {
+        console.error("Erro ao processar transferências:", error);
+        setError("Não foi possível carregar os dados.");
       } finally {
         setLoading(false);
       }
     };
-    fetchData();
-  }, []);
+
+    processarTransferencias();
+  }, []); // Adicionado array de dependências vazio para evitar chamadas infinitas
 
   const handleCadastrarTransferencia = () => {
     navigate("/cadastro-transferencias");
   };
 
   const handleEditarTransferencia = (id: string) => {
-    console.log(id);
     navigate(`/editar-transferencias/${id}`);
   };
 
@@ -85,10 +97,7 @@ const Transferencias = () => {
             </button>
           )}
         />
-        <button
-          className="edit-button"
-          onClick={handleCadastrarTransferencia}
-        >
+        <button className="edit-button" onClick={handleCadastrarTransferencia}>
           Cadastrar Nova Solicitação
         </button>
       </main>

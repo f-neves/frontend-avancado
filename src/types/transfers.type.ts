@@ -51,3 +51,17 @@ export interface Transfer {
   };
   solicitacaoId: string;
 }
+
+export interface TabelaTransferencia extends Record<string, unknown> {
+  paciente: string;
+  origem: string;
+  destino: string;
+  data: string;
+  classificacao: string;
+  procedimentosAcondicionamento: string;
+  procedimentosUnidadeDestino: string;
+  distancia: string;
+  meioDeTransporte: string;
+  status: string;
+  motivo: string;
+}

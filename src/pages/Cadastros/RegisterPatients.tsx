@@ -31,7 +31,6 @@ const CadastroPacientes = () => {
     try {
       // Chamar a API para criar o paciente
       await createPaciente(values);
-      console.log("values", values)
 
       alert("Paciente cadastrado com sucesso!");
       resetForm(); // Limpa o formulário após o cadastro

@@ -2,7 +2,7 @@ import { Formik, Field, Form, ErrorMessage, FormikHelpers } from "formik";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { useEffect, useState } from "react";
-import { getHospitalById, updateHospital } from "../../services/hospitals.api";
+import { deleteHospital, getHospitalById, updateHospital } from "../../services/hospitals.api";
 import "../../../css/index.css";
 import "../../../css/main.css";
 import "../../../css/paginas.css";
@@ -57,6 +57,19 @@ const EditHospital = () => {
       alert("Erro ao atualizar o hospital. Tente novamente.");
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (window.confirm("Você tem certeza que deseja excluir este hospital?")) {
+      try {
+        await deleteHospital(id as string);
+        alert("Hospital excluído com sucesso!");
+        navigate("/hospitais");
+      } catch (error) {
+        console.error("Erro ao excluir hospital:", error);
+        alert("Erro ao excluir hospital.");
+      }
     }
   };
 
@@ -167,6 +180,20 @@ const EditHospital = () => {
 
               <button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? "Salvando..." : "Salvar Alterações"}
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate("/hospitais")}
+                className="cancel-button"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="delete-button"
+              >
+                Excluir Hospital
               </button>
             </Form>
           )}

@@ -54,7 +54,6 @@ export async function createPaciente(pacienteData: dataPatient) {
 // Edita um paciente existente
 export async function updatePaciente(id: string, pacienteData: Patient) {
   delete pacienteData.id;
-  console.log("pacienteData - updatePaciente", pacienteData);
   const url = `${API_URL}/api/pacientes/${id}`;
   try {
     const response = await fetch(url, {

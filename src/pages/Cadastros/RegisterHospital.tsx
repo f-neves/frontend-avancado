@@ -47,10 +47,11 @@ const CadastroHospitais = () => {
 
   const handleSubmit = async (values: typeof initialValues, { setSubmitting, resetForm }: any) => {
     try {
-      // Chama a API para criar o hospital
+
       await createHospital(values);
       alert("Hospital cadastrado com sucesso!");
-      resetForm(); // Limpa o formulário
+      resetForm(); 
+      setSubmitting(false);      
       navigate("/hospitais"); // Redireciona para a listagem de hospitais
     } catch (error) {
       console.error(error);
@@ -59,6 +60,8 @@ const CadastroHospitais = () => {
       setSubmitting(false);
     }
   };
+
+
 
   return (
     <div>

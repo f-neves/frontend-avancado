@@ -7,6 +7,7 @@ import "../../../css/index.css";
 import "../../../css/main.css";
 import "../../../css/paginas.css";
 import { Transfer } from "../../types/transfers.type";
+import { getPacienteById } from "../../services/patients.api";
 
 const EditarTransferencia = () => {
   const { id } = useParams();
@@ -17,7 +18,13 @@ const EditarTransferencia = () => {
   useEffect(() => {
     const fetchTransfer = async () => {
       try {
-        const data = await getTransferenciaById(id as string);
+        const dataTransferencia = await getTransferenciaById(id as string);
+        const dataPaciente = await getPacienteById(dataTransferencia.solicitacao.pacienteId as string);
+        console.log("dataPaciente",dataPaciente);
+        const data ={
+          ...dataTransferencia,
+          dataPaciente
+        }
         setTransferencia(data);
       } catch (error) {
         console.error("Erro ao buscar dados da transferência:", error);
@@ -29,8 +36,6 @@ const EditarTransferencia = () => {
 
     fetchTransfer();
   }, [id]);
-
-  console.log("transferencia", transferencia);
 
   const validationSchema = Yup.object({
     origem: Yup.string().required("Origem é obrigatória"),
@@ -89,7 +94,16 @@ const EditarTransferencia = () => {
         >
           {({ isSubmitting }) => (
             <Form className="register-form">
-              <label htmlFor="origem">Origem:</label>
+            <label htmlFor="paciente">Paciente:</label>
+              <Field
+                type="text"
+                id="paciente"
+                name="dataPaciente.nome"
+                className="input"
+              />
+              <ErrorMessage name="paciente" component="div" className="error-message" />
+
+              <label htmlFor="origem">Hospital de Origem:</label>
               <Field 
                 type="text" 
                 id="origem" 
@@ -97,7 +111,7 @@ const EditarTransferencia = () => {
                 className="input" 
               />
 
-              <label htmlFor="destino">Destino:</label>
+              <label htmlFor="destino">Hospital de Destino:</label>
               <Field 
                 type="text" 
                 id="destino" 

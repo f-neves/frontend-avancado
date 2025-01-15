@@ -2,7 +2,7 @@ import { Formik, Field, Form, ErrorMessage, FormikHelpers } from "formik";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { useEffect, useState } from "react";
-import { getMedicoById, updateMedico } from "../../services/doctors.api";
+import { deleteMedico, getMedicoById, updateMedico } from "../../services/doctors.api";
 import "../../../css/index.css";
 import "../../../css/main.css";
 import "../../../css/paginas.css";
@@ -59,6 +59,19 @@ const EditDoctor = () => {
       alert("Erro ao atualizar o médico. Tente novamente.");
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (window.confirm("Você tem certeza que deseja excluir este médico?")) {
+      try {
+        await deleteMedico(id as string);
+        alert("Médico excluído com sucesso!");
+        navigate("/medico");
+      } catch (error) {
+        console.error("Erro ao excluir médico:", error);
+        alert("Erro ao excluir médico.");
+      }
     }
   };
 
@@ -158,6 +171,20 @@ const EditDoctor = () => {
 
               <button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? "Salvando..." : "Salvar Alterações"}
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate("/medicos")}
+                className="cancel-button"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="delete-button"
+              >
+                Excluir Médico
               </button>
             </Form>
           )}

@@ -4,6 +4,10 @@ import * as Yup from "yup";
 import "../../../css/index.css";
 import "../../../css/main.css";
 import "../../../css/paginas.css";
+import { createTransferencia } from "../../services/transfers.api";
+import { useEffect, useState } from "react";
+import { getPacientes } from "../../services/patients.api";
+import { Patient } from "../../types/patient.type";
 
 const CadastroTransferencia = () => {
   const initialValues = {
@@ -13,26 +17,43 @@ const CadastroTransferencia = () => {
     justificativa: ""
   };
   const navigate = useNavigate();
+  const [pacientes, setPacientes] = useState<Patient[]>([]);
 
   const validationSchema = Yup.object({
-    medicoOrigem: Yup.string()
-      .required("Médico de origem é obrigatório"),
-    paciente: Yup.string()
-      .required("Paciente é obrigatório"),
-    prioridade: Yup.string()
-      .oneOf(["BAIXA", "MEDIA", "ALTA"], "Selecione uma prioridade válida")
-      .required("Prioridade é obrigatória"),
-    justificativa: Yup.string()
-      .required("Justificativa é obrigatória")
-      .min(10, "A justificativa deve ter pelo menos 10 caracteres")
+    origem: Yup.string().required("Origem é obrigatória"),
+    destino: Yup.string().required("Destino é obrigatório"),
+    classificacao: Yup.string().required("Classificação é obrigatória"),
+    procedimentosAcondicionamento: Yup.string().required("Este campo é obrigatório"),
+    procedimentosUnidadeDestino: Yup.string().required("Este campo é obrigatório"),
+    distancia: Yup.number().required("Distância é obrigatória"),
+    meioTransporte: Yup.string().required("Meio de transporte é obrigatório"),
+    status: Yup.string().required("Status é obrigatório"),
+    motivo: Yup.string(),
   });
 
-  const handleSubmit = (values: typeof initialValues, { setSubmitting }: any) => {
-    console.log(values);
-    alert("Solicitação de transferência cadastrada com sucesso!");
-    setSubmitting(false);
-    navigate("/transferencias");
+  const handleSubmit = async (values: typeof initialValues, { setSubmitting, resetForm }: any) => {
+    try {
+      await createTransferencia(values);
+      alert("Solicitação de transferência cadastrada com sucesso!");
+      resetForm(); 
+      setSubmitting(false);
+      navigate("/transferencias");
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao cadastrar transferência. Tente novamente.");
+    } finally {
+      setSubmitting(false);
+    }
   };
+
+  useEffect(() => {
+    const fetchPatients = async () => {
+      const dataPacientes = await getPacientes();
+      setPacientes(dataPacientes);
+    }
+    fetchPatients()
+  }, [])
+  
 
   return (
     <div>
@@ -48,23 +69,26 @@ const CadastroTransferencia = () => {
           {({ isSubmitting }) => (
             <Form className="register-form">
               <label htmlFor="medicoOrigem">Médico de Origem:</label>
-              <Field
-                type="text"
-                id="medicoOrigem"
-                name="medicoOrigem"
-                className="input"
+              <Field 
+                type="text" 
+                id="origem" 
+                name="origem.nome"
+                className="input" 
                 placeholder="Nome do médico de origem"
               />
               <ErrorMessage name="medicoOrigem" component="div" className="error-message" />
 
               <label htmlFor="paciente">Paciente:</label>
-              <Field
-                type="text"
-                id="paciente"
-                name="paciente"
-                className="input"
-                placeholder="Nome do paciente"
-              />
+              <Field as="select" id="paciente" name="paciente" className="input">
+                <option value="" disabled>
+                  Selecione o paciente
+                </option>
+                {pacientes?.map((pacientes) => (
+                  <option key={pacientes?.id} value={pacientes?.id}>
+                    {pacientes?.nome}
+                  </option>
+                ))}
+              </Field>
               <ErrorMessage name="paciente" component="div" className="error-message" />
 
               <label htmlFor="prioridade">Prioridade:</label>
