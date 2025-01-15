@@ -38,6 +38,10 @@ const Medicos = () => {
     navigate("/cadastro-medicos");
   };
 
+  const handleEditarMedico = (id: string) => {
+    navigate(`/editar-medicos/${id}`); // Redireciona para a página de edição do paciente
+  };
+
   if (loading) return <p>Carregando...</p>;
   if (error) return <p>Erro: {error}</p>;
 
@@ -48,9 +52,9 @@ const Medicos = () => {
         <GenericTable
           headers={headers}
           data={data}
-          actions={(item) => (
+          actions={(item: Record<string, unknown>) => (
             <button
-              onClick={() => alert(`Editando o médico: ${item.nome}`)}
+              onClick={() => handleEditarMedico(item.id as string)}
               className="edit-button"
             >
               Editar

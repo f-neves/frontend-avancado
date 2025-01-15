@@ -1,4 +1,4 @@
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import { Formik, Field, Form, ErrorMessage, FormikHelpers } from "formik";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { createPaciente } from "../../services/patients.api"; // Ajuste o caminho se necessário
@@ -26,10 +26,12 @@ const CadastroPacientes = () => {
     sexo: Yup.string().required("Sexo é obrigatório"),
   });
 
-  const handleSubmit = async (values: typeof initialValues, { setSubmitting, resetForm }) => {
+  const handleSubmit = async (
+    values: typeof initialValues, { setSubmitting, resetForm }:FormikHelpers<typeof initialValues>) => {
     try {
       // Chamar a API para criar o paciente
       await createPaciente(values);
+      console.log("values", values)
 
       alert("Paciente cadastrado com sucesso!");
       resetForm(); // Limpa o formulário após o cadastro

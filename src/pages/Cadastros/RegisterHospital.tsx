@@ -72,7 +72,12 @@ const CadastroHospitais = () => {
           {({ isSubmitting }) => (
             <Form className="register-form">
               <label htmlFor="nome">Nome:</label>
-              <Field type="text" id="nome" name="nome" className="input" placeholder="Nome do hospital" />
+              <Field 
+                type="text" 
+                id="nome" 
+                name="nome" 
+                className="input" 
+                placeholder="Nome do hospital" />
               <ErrorMessage name="nome" component="div" className="error-message" />
 
               <label htmlFor="telefone">Telefone:</label>

@@ -11,6 +11,8 @@ import RegisterDoctor from './pages/Cadastros/RegisterDoctor';
 import RegisterHospital from './pages/Cadastros/RegisterHospital';
 import EditPatients from './pages/Editar/EditPatients';
 import EditTransfers from './pages/Editar/EditTransfers';
+import EditHospital from './pages/Editar/EditHospital';
+import EditDoctor from './pages/Editar/EditDoctor';
 
 function AppRoutes() {
   return (
@@ -26,7 +28,9 @@ function AppRoutes() {
       <Route path="/cadastro-transferencias" element={<RegisterTransfers />} />
       <Route path="/editar-transferencias/:id" element={<EditTransfers />} />
       <Route path="/cadastro-medicos" element={<RegisterDoctor />} />
+      <Route path="/editar-medicos/:id" element={<EditDoctor />} />
       <Route path="/cadastro-hospitais" element={<RegisterHospital />} />
+      <Route path="/editar-unidades-hospitalares/:id" element={<EditHospital />} />
     </Routes>
   );
 }

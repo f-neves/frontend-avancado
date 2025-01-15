@@ -21,8 +21,7 @@ const CadastroMedicos = () => {
       .required("Nome é obrigatório")
       .min(3, "Nome deve ter pelo menos 3 caracteres"),
     crm: Yup.string()
-      .required("CRM é obrigatório")
-      .matches(/^\d+$/, "CRM deve conter apenas números"),
+      .required("CRM é obrigatório"),
     especialidade: Yup.string().required("Especialidade é obrigatória"),
     papel: Yup.string()
       .oneOf(["REGULADOR", "ORIGEM", "DESTINO"], "Selecione um papel válido")

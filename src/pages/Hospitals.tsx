@@ -23,7 +23,6 @@ useEffect(() => {
     const fetchData = async () => {
       try {
         const hospitals = await getHospitais();
-
         // Formatar os dados para a tabela
         const formattedData = hospitals.map((hospital) => ({
           name: hospital.nome || "Desconhecido",
@@ -50,6 +49,10 @@ useEffect(() => {
     navigate("/cadastro-hospitais");
   };
 
+  const handleEditarHospital = (id: string) => {
+    navigate(`/editar-unidades-hospitalares/${id}`); // Redireciona para a página de edição do paciente
+  };
+
   if (loading) return <p>Carregando...</p>;
   if (error) return <p>Erro: {error}</p>;
 
@@ -60,9 +63,9 @@ useEffect(() => {
         <GenericTable
           headers={headers}
           data={data}
-          actions={(item) => (
+          actions={(item: Record<string, unknown>) => (
             <button
-              onClick={() => alert(`Editando o hospital: ${item.name}`)}
+              onClick={() => handleEditarHospital(item.id as string)}
               className="edit-button"
             >
               Editar

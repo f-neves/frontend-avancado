@@ -15,6 +15,22 @@ export async function getHospitais() {
   }
 }
 
+// Busca uma unidade hospitalar pelo ID
+export async function getHospitalById(id: string) {
+  const url = `${API_URL}/api/unidades-hospitalares/${id}`;
+  try {
+    const response = await fetch(url);
+    console.log("response", response);
+    if (!response.ok) {
+      throw new Error(`Erro ao buscar hospitais: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    throw new Error("Não foi possível carregar o hospital.");
+  }
+}
+
 // Cria um novo hospitais
 export async function createHospital(hospitaisData: any) {
   const url = `${API_URL}/api/unidades-hospitalares`;

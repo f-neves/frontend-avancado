@@ -14,6 +14,22 @@ export async function getMedicos() {
   }
 }
 
+
+// Busca um paciente pelo ID
+export async function getMedicoById(id: string) {
+  const url = `${API_URL}/api/medicos/${id}`;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Erro ao buscar paciente: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    throw new Error("Não foi possível carregar o paciente.");
+  }
+}
+
 // Cria um novo médico
 export async function createMedicos(medicoData: any) {
   const url = `${API_URL}/api/medicos`;

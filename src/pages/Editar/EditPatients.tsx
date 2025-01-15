@@ -8,8 +8,6 @@ import "../../../css/main.css";
 import "../../../css/paginas.css";
 import { Patient } from "../../types/patient.type";
 
-
-
 const EditarPaciente = () => {
   const { id } = useParams();
   const navigate = useNavigate();

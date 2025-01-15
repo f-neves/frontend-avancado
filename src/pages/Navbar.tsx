@@ -8,7 +8,7 @@ function Navbar() {
     <div>
       <nav className="navbar">
         <Link className="logo" to="/">
-          <img src="logo.png" alt="Logo STP" />
+          <img src="/logo.png" alt="Logo STP" />
         </Link>
         <Link to="/">Home</Link>
         <Link to="/login">Login</Link>
@@ -16,6 +16,7 @@ function Navbar() {
         <Link to="/hospitais">Hospitais</Link>
         <Link to="/transferencias">Transferências</Link>
         <Link to="/medicos">Médicos</Link>
+        <div></div>
       </nav>
     </div>
   );
