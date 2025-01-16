@@ -67,7 +67,7 @@ const EditDoctor = () => {
       try {
         await deleteMedico(id as string);
         alert("Médico excluído com sucesso!");
-        navigate("/medico");
+        navigate("/medicos");
       } catch (error) {
         console.error("Erro ao excluir médico:", error);
         alert("Erro ao excluir médico.");

@@ -62,7 +62,7 @@ export async function updatePaciente(id: string, pacienteData: Patient) {
       body: JSON.stringify(pacienteData),
     });
     if (!response.ok) {
-      const errorDetails = await response.text(); // Captura detalhes do erro, se existirem
+      const errorDetails = await response.text();
       console.error("Erro no backend:", errorDetails);
       throw new Error(`Erro ao atualizar paciente: ${response.statusText}`);
     }

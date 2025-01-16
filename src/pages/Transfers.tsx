@@ -10,7 +10,7 @@ import { TabelaTransferencia } from "../types/transfers.type";
 
 const Transferencias = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState<TabelaTransferencia[]>([]); // Define o tipo explícito do estado
+  const [data, setData] = useState<TabelaTransferencia[]>([]); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -40,6 +40,7 @@ const Transferencias = () => {
 
 
             return {
+              id: transferencia.id,
               paciente: dataPaciente.nome,
               origem: transferencia.origem?.nome || "Desconhecido",
               destino: transferencia.destino?.nome || "Desconhecido",
@@ -56,7 +57,6 @@ const Transferencias = () => {
             };
           })
         );
-        console.log("formattedData",formattedData);
 
         setData(formattedData); // Atualiza o estado com os dados formatados
       } catch (error) {

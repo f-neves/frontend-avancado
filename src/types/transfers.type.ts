@@ -53,6 +53,7 @@ export interface Transfer {
 }
 
 export interface TabelaTransferencia extends Record<string, unknown> {
+  id: string;
   paciente: string;
   origem: string;
   destino: string;

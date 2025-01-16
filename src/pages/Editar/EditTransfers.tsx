@@ -1,6 +1,6 @@
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import { Formik, Field, Form, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
-import { useParams, useNavigate, data } from "react-router-dom";
+import { useParams, useNavigate} from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getTransferenciaById, updateTransfer, deleteTransfer } from "../../services/transfers.api";
 import "../../../css/index.css";
@@ -14,6 +14,18 @@ const EditarTransferencia = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [transferencia, setTransferencia] = useState<Transfer | null>(null);
+
+  const validationSchema = Yup.object({
+    origem: Yup.string().required("Origem é obrigatória"),
+    destino: Yup.string().required("Destino é obrigatório"),
+    classificacao: Yup.string().required("Classificação é obrigatória"),
+    procedimentosAcondicionamento: Yup.string().required("Este campo é obrigatório"),
+    procedimentosUnidadeDestino: Yup.string().required("Este campo é obrigatório"),
+    distancia: Yup.number().required("Distância é obrigatória"),
+    meioTransporte: Yup.string().required("Meio de transporte é obrigatório"),
+    status: Yup.string().required("Status é obrigatório"),
+    motivo: Yup.string(),
+  });
 
   useEffect(() => {
     const fetchTransfer = async () => {
@@ -37,26 +49,16 @@ const EditarTransferencia = () => {
     fetchTransfer();
   }, [id]);
 
-  const validationSchema = Yup.object({
-    origem: Yup.string().required("Origem é obrigatória"),
-    destino: Yup.string().required("Destino é obrigatório"),
-    classificacao: Yup.string().required("Classificação é obrigatória"),
-    procedimentosAcondicionamento: Yup.string().required("Este campo é obrigatório"),
-    procedimentosUnidadeDestino: Yup.string().required("Este campo é obrigatório"),
-    distancia: Yup.number().required("Distância é obrigatória"),
-    meioTransporte: Yup.string().required("Meio de transporte é obrigatório"),
-    status: Yup.string().required("Status é obrigatório"),
-    motivo: Yup.string(),
-  });
-
-  const handleSubmit = async (values: Transfer, { setSubmitting }: any) => {
+  const handleSubmit = async (
+    values: Transfer, 
+    { setSubmitting }: FormikHelpers<Transfer>) => {
     try {
       await updateTransfer(id as string, values);
       alert("Transferência atualizada com sucesso!");
       navigate("/transferencias");
     } catch (error) {
       console.error("Erro ao atualizar transferência:", error);
-      alert("Erro ao atualizar transferência.");
+      // alert("Erro ao atualizar transferência.");
     } finally {
       setSubmitting(false);
     }
@@ -211,7 +213,7 @@ const EditarTransferencia = () => {
                 className="input" />
               <ErrorMessage name="motivo" component="div" className="error-message" />
 
-              <div className="button-group">
+              
                 <button type="submit" disabled={isSubmitting}>
                   {isSubmitting ? "Salvando..." : "Salvar Alterações"}
                 </button>
@@ -229,7 +231,7 @@ const EditarTransferencia = () => {
                 >
                   Excluir Transferência
                 </button>
-              </div>
+              
             </Form>
           )}
         </Formik>

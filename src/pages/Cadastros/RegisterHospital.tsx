@@ -47,7 +47,6 @@ const CadastroHospitais = () => {
 
   const handleSubmit = async (values: typeof initialValues, { setSubmitting, resetForm }: any) => {
     try {
-
       await createHospital(values);
       alert("Hospital cadastrado com sucesso!");
       resetForm(); 
@@ -60,8 +59,6 @@ const CadastroHospitais = () => {
       setSubmitting(false);
     }
   };
-
-
 
   return (
     <div>

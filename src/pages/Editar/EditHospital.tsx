@@ -1,4 +1,4 @@
-import { Formik, Field, Form, ErrorMessage, FormikHelpers } from "formik";
+import { Formik, Field, Form, ErrorMessage } from "formik";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { useEffect, useState } from "react";
@@ -33,10 +33,11 @@ const EditHospital = () => {
   useEffect(() => {
     const fetchHospital = async () => {
       try {
-        const hospital = await getHospitalById(id as string);
-        setHospital(hospital);
+        const date = await getHospitalById(id as string);
+        setHospital(date);
       } catch (err) {
         setError("Erro ao carregar os dados do hospital.");
+        alert("Erro ao carregar dados do paciente.");
       } finally {
         setLoading(false);
       }
@@ -46,14 +47,13 @@ const EditHospital = () => {
   }, [id]);
 
   const handleSubmit = async (
-    values: Hospital,
-    { setSubmitting }: FormikHelpers<Hospital>
-  ) => {
+    values: Hospital, { setSubmitting }: any) => {
     try {
-      await updateHospital(id!, values);
+      await updateHospital(id as string, values);
       alert("Hospital atualizado com sucesso!");
       navigate("/hospitais");
     } catch (err) {
+      console.log("error",err, values)
       alert("Erro ao atualizar o hospital. Tente novamente.");
     } finally {
       setSubmitting(false);

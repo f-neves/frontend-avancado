@@ -1,3 +1,5 @@
+import { Transfer } from "../types/transfers.type";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 export async function getTransferencias() {
@@ -49,7 +51,7 @@ export async function createTransferencia(transferData: Partial<any>) {
 }
 
 // Atualiza uma transferência existente
-export async function updateTransfer(id: string, transferData: Partial<any>) {
+export async function updateTransfer(id: string, transferData: Transfer) {
   const url = `${API_URL}/api/transferencias/${id}`;
   try {
     const response = await fetch(url, {
@@ -58,6 +60,8 @@ export async function updateTransfer(id: string, transferData: Partial<any>) {
       body: JSON.stringify(transferData),
     });
     if (!response.ok) {
+      const errorDetails = await response.text();
+      console.error("Erro no backend:", errorDetails);
       throw new Error(`Erro ao atualizar transferência: ${response.statusText}`);
     }
     return await response.json();

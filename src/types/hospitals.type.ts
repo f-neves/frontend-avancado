@@ -1,4 +1,5 @@
 export type Hospital = {
+  id?: string;
   nome: string;
   telefone?: string;
   email?: string;
@@ -9,6 +10,7 @@ export type Hospital = {
     estado: string;
     cep: string;
   };
+  enderecoid?: string;
   dadosPessoal?: string;
   disponibilidadeLeitos?: number;
   temUTI?: boolean;

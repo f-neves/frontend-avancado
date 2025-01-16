@@ -21,7 +21,7 @@ const EditarPaciente = () => {
         setPaciente(data);
       } catch (error) {
         console.error("Erro ao buscar dados do paciente:", error);
-        alert("Erro ao carregar dados do paciente.");
+        // alert("Erro ao carregar dados do paciente.");
       } finally {
         setIsLoading(false);
       }
@@ -43,14 +43,15 @@ const EditarPaciente = () => {
       .required("Sexo é obrigatório")
   });
 
-  const handleSubmit = async (values: Patient, { setSubmitting }: any) => {
+  const handleSubmit = async (
+    values: Patient, { setSubmitting }: any) => {
     try {
       await updatePaciente(id as string, values);
       alert("Paciente atualizado com sucesso!");
       navigate("/pacientes");
     } catch (error) {
-      console.error("Erro ao atualizar paciente:", error);
-      alert("Erro ao atualizar paciente.");
+      // console.error("Erro ao atualizar paciente:", error);
+      // alert("Erro ao atualizar paciente.");
     } finally {
       setSubmitting(false);
     }

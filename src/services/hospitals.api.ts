@@ -1,3 +1,5 @@
+import { Hospital } from "../types/hospitals.type";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 // Obtém todos os hospitais
@@ -20,7 +22,6 @@ export async function getHospitalById(id: string) {
   const url = `${API_URL}/api/unidades-hospitalares/${id}`;
   try {
     const response = await fetch(url);
-    console.log("response", response);
     if (!response.ok) {
       throw new Error(`Erro ao buscar hospitais: ${response.statusText}`);
     }
@@ -51,7 +52,8 @@ export async function createHospital(hospitaisData: any) {
 }
 
 // Atualiza um hospitais existente
-export async function updateHospital(id: string, hospitaisData: Partial<any>) {
+export async function updateHospital(id: string, hospitaisData: Hospital) {
+   
   const url = `${API_URL}/api/unidades-hospitalares/${id}`;
   try {
     const response = await fetch(url, {
@@ -60,6 +62,8 @@ export async function updateHospital(id: string, hospitaisData: Partial<any>) {
       body: JSON.stringify(hospitaisData),
     });
     if (!response.ok) {
+      const errorDetails = await response.text();
+      console.error("Erro no backend:", errorDetails);
       throw new Error(`Erro ao atualizar hospitais: ${response.statusText}`);
     }
     return await response.json();

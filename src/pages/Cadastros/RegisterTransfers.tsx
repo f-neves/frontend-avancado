@@ -8,6 +8,8 @@ import { createTransferencia } from "../../services/transfers.api";
 import { useEffect, useState } from "react";
 import { getPacientes } from "../../services/patients.api";
 import { Patient } from "../../types/patient.type";
+import { getMedicos } from "../../services/doctors.api";
+import { getHospitais } from "../../services/hospitals.api";
 
 const CadastroTransferencia = () => {
   const initialValues = {
@@ -18,6 +20,8 @@ const CadastroTransferencia = () => {
   };
   const navigate = useNavigate();
   const [pacientes, setPacientes] = useState<Patient[]>([]);
+  const [medicos, setMedicos] = useState<Patient[]>([]);
+  const [hospitals, setHospitals] = useState<Patient[]>([]);
 
   const validationSchema = Yup.object({
     origem: Yup.string().required("Origem é obrigatória"),
@@ -53,6 +57,23 @@ const CadastroTransferencia = () => {
     }
     fetchPatients()
   }, [])
+
+  useEffect(() => {
+    const fetchDoctors= async () => {
+      const dataMedicos = await getMedicos();
+      setMedicos(dataMedicos);
+    }
+    fetchDoctors()
+  }, [])
+
+  useEffect(() => {
+    const fetchHospitals= async () => {
+      const dataHospitals = await getHospitais();
+      setHospitals(dataHospitals);
+    }
+    fetchHospitals()
+  }, [])
+
   
 
   return (
@@ -69,17 +90,25 @@ const CadastroTransferencia = () => {
           {({ isSubmitting }) => (
             <Form className="register-form">
               <label htmlFor="medicoOrigem">Médico de Origem:</label>
-              <Field 
-                type="text" 
-                id="origem" 
-                name="origem.nome"
-                className="input" 
-                placeholder="Nome do médico de origem"
-              />
+              <Field as="select" id="medicos" name="medicos" className="input">
+                <option value="" disabled>
+                  Selecione o médico de origem:
+                </option>
+                {medicos?.map((medicos) => (
+                  <option key={medicos?.id} value={medicos?.id}>
+                    {medicos?.nome}
+                  </option>
+                ))}
+              </Field>
               <ErrorMessage name="medicoOrigem" component="div" className="error-message" />
 
               <label htmlFor="paciente">Paciente:</label>
-              <Field as="select" id="paciente" name="paciente" className="input">
+              <Field 
+                as="select" 
+                id="paciente" 
+                name="paciente" 
+                className="input"
+                >
                 <option value="" disabled>
                   Selecione o paciente
                 </option>
@@ -91,11 +120,45 @@ const CadastroTransferencia = () => {
               </Field>
               <ErrorMessage name="paciente" component="div" className="error-message" />
 
-              <label htmlFor="prioridade">Prioridade:</label>
-              <Field
+              <label htmlFor="origem">Hospital de Origem:</label>
+              <Field 
+                as="select" 
+                id="destino" 
+                name="destino" 
+                className="input"
+                >
+                <option value="" disabled>
+                  Selecione o paciente
+                </option>
+                {hospitals?.map((hospitals) => (
+                  <option key={hospitals?.id} value={hospitals?.id}>
+                    {hospitals?.nome}
+                  </option>
+                ))}
+              </Field>
+
+              <label htmlFor="destino">Hospital de Destino:</label>
+              <Field 
+                as="select" 
+                id="origem" 
+                name="origem" 
+                className="input"
+                >
+                <option value="" disabled>
+                  Selecione o paciente
+                </option>
+                {hospitals?.map((hospitals) => (
+                  <option key={hospitals?.id} value={hospitals?.id}>
+                    {hospitals?.nome}
+                  </option>
+                ))}
+              </Field>
+
+              <label htmlFor="classificacao">Classificação:</label>
+              <Field 
                 as="select"
-                id="prioridade"
-                name="prioridade"
+                id="classificacao" 
+                name="classificacao" 
                 className="input"
               >
                 <option value="" disabled>Selecione o nível da prioridade</option>
@@ -104,6 +167,63 @@ const CadastroTransferencia = () => {
                 <option value="ALTA">Alta</option>
               </Field>
               <ErrorMessage name="prioridade" component="div" className="error-message" />
+
+              <label htmlFor="procedimentosAcondicionamento">Procedimentos de Acondicionamento:</label>
+              <Field
+                type="text"
+                id="procedimentosAcondicionamento"
+                name="procedimentosAcondicionamento"
+                className="input"
+              />
+              <ErrorMessage
+                name="procedimentosAcondicionamento" component="div" className="error-message"
+              />
+
+              <label htmlFor="procedimentosUnidadeDestino">Procedimentos Unidade de Destino:</label>
+              <Field
+                type="text"
+                id="procedimentosUnidadeDestino"
+                name="procedimentosUnidadeDestino"
+                className="input"
+              />
+              <ErrorMessage
+                name="procedimentosUnidadeDestino" component="div" className="error-message"
+              />
+
+              <label htmlFor="distancia">Distância (km):</label>
+              <Field 
+                type="number" 
+                id="distancia" 
+                name="distancia" 
+                className="input" />
+              <ErrorMessage name="distancia" component="div" className="error-message" />
+
+              <label htmlFor="meioTransporte">Meio de Transporte:</label>
+              <Field 
+                as="select"
+                id="meioTransporte" 
+                name="meioTransporte" 
+                className="input"
+              >
+                <option value="" disabled>Selecione o meio de transporte</option>
+                <option value="AMBULANCIA">Ambulância</option>
+                <option value="HELICOPTERO">Helicóptero</option>
+                <option value="OUTRO">Outro</option>
+              </Field>
+
+              <label htmlFor="status">Status da transferência:</label>
+              <Field 
+                as="select"
+                id="status" 
+                name="status" 
+                className="input"
+              >
+                <option value="" disabled>Selecione o status</option>
+                <option value="PENDENTE">Pedente</option>
+                <option value="EM_ANDAMENTO">Em andamento</option>
+                <option value="CONCLUIDA">Concluída</option>
+                <option value="CANCELADA">Cancelada</option>
+              </Field>
 
               <label htmlFor="justificativa">Justificativa:</label>
               <Field
